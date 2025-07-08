@@ -208,7 +208,7 @@ export const moveText = (x: number | PDFNumber, y: number | PDFNumber) =>
 /* ==================== Text Showing Operators ==================== */
 
 export const showText = (text: PDFHexString) =>
-  PDFOperator.of(Ops.ShowText, [text]);
+  PDFOperator.of(Ops.ShowTextAdjusted, [text]);
 
 /* ==================== Text State Operators ==================== */
 

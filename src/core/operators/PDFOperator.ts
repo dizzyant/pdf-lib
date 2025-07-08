@@ -60,17 +60,39 @@ class PDFOperator {
   copyBytesInto(buffer: Uint8Array, offset: number): number {
     const initialOffset = offset;
 
-    for (let idx = 0, len = this.args.length; idx < len; idx++) {
-      const arg = this.args[idx];
-      if (arg instanceof PDFObject) {
-        offset += arg.copyBytesInto(buffer, offset);
-      } else {
-        offset += copyStringIntoBuffer(arg, buffer, offset);
-      }
-      buffer[offset++] = CharCodes.Space;
-    }
+    if (this.name === PDFOperatorNames.ShowTextAdjusted) {
+      buffer[offset++] = CharCodes.LeftSquareBracket;
 
-    offset += copyStringIntoBuffer(this.name, buffer, offset);
+      for (let idx = 0, len = this.args.length; idx < len; idx++) {
+        const arg = this.args[idx];
+        if (arg instanceof PDFObject) {
+          offset += arg.copyBytesInto(buffer, offset);
+        } else {
+          offset += copyStringIntoBuffer(arg, buffer, offset);
+        }
+
+        if (idx < len - 1) {
+          buffer[offset++] = CharCodes.Space;
+        }
+      }
+
+      buffer[offset++] = CharCodes.RightSquareBracket;
+      buffer[offset++] = CharCodes.Space;
+      offset += copyStringIntoBuffer(this.name, buffer, offset);
+    } else {
+      // Original behavior for all other operators
+      for (let idx = 0, len = this.args.length; idx < len; idx++) {
+        const arg = this.args[idx];
+        if (arg instanceof PDFObject) {
+          offset += arg.copyBytesInto(buffer, offset);
+        } else {
+          offset += copyStringIntoBuffer(arg, buffer, offset);
+        }
+        buffer[offset++] = CharCodes.Space;
+      }
+
+      offset += copyStringIntoBuffer(this.name, buffer, offset);
+    }
 
     return offset - initialOffset;
   }
