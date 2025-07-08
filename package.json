@@ -1,5 +1,5 @@
 {
-  "name": "@cantoo/pdf-lib",
+  "name": "@dizzyant/pdf-lib",
   "version": "2.4.2",
   "description": "Create and modify PDF files with JavaScript",
   "author": "Andrew Dillon <andrew.dillon.j@gmail.com>",
