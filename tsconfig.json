@@ -29,13 +29,13 @@
     /* Module Resolution Options */
     "baseUrl": "./src",
     "paths": {
-      "src/*": ["./*"],
+      "src/*": ["./*"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "moduleResolution": "node",
-    "jsx": "react",
+    "jsx": "react"
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": [
@@ -49,5 +49,6 @@
     "node_modules",
     "scratchpad",
     "tests",
-  ],
+    ".yarn"
+  ]
 }
