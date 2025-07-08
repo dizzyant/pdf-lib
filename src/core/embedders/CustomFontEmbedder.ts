@@ -61,11 +61,20 @@ class CustomFontEmbedder {
    * Unicode, but embedded fonts use their own custom encodings)
    */
   encodeText(text: string): PDFHexString {
-    const { glyphs } = this.font.layout(text, this.fontFeatures);
+    const { glyphs, positions } = this.font.layout(text, this.fontFeatures);
     const hexCodes = new Array(glyphs.length);
     for (let idx = 0, len = glyphs.length; idx < len; idx++) {
-      hexCodes[idx] = toHexStringOfMinLength(glyphs[idx].id, 4);
+      const kerning = glyphs[idx].advanceWidth - positions[idx].xAdvance;
+      const kernAmount = typeof kerning === 'number' ? kerning * this.scale : 0;
+
+      if (kernAmount !== 0) {
+        hexCodes[idx] =
+          toHexStringOfMinLength(glyphs[idx].id, 4) + `>${kernAmount}<`;
+      } else {
+        hexCodes[idx] = toHexStringOfMinLength(glyphs[idx].id, 4);
+      }
     }
+
     return PDFHexString.of(hexCodes.join(''));
   }
 

@@ -50,9 +50,20 @@ class StandardFontEmbedder {
     const glyphs = this.encodeTextAsGlyphs(text);
     const hexCodes = new Array(glyphs.length);
     for (let idx = 0, len = glyphs.length; idx < len; idx++) {
-      hexCodes[idx] = toHexString(glyphs[idx].code);
+      const left = glyphs[idx].name;
+      const right = (glyphs[idx + 1] || {}).name;
+
+      const kerning = this.font.getXAxisKerningForPair(left, right);
+      const kernAmount = typeof kerning === 'number' ? kerning * -1 : 0;
+
+      if (kernAmount !== 0) {
+        hexCodes[idx] = toHexString(glyphs[idx].code) + `>${kernAmount}<`;
+      } else {
+        hexCodes[idx] = toHexString(glyphs[idx].code);
+      }
     }
-    return PDFHexString.of(hexCodes.join(''));
+
+    return PDFHexString.of(`${hexCodes.join('')}`);
   }
 
   widthOfTextAtSize(text: string, size: number): number {
